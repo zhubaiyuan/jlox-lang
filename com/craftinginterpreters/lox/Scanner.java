@@ -59,6 +59,9 @@ class Scanner {
             case '*':
                 addToken(STAR);
                 break;
+            default:
+                Lox.error(line, "Unexpected character.");
+                break;
         }
     }
 
