@@ -44,6 +44,16 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         expr.accept(this);
     }
 
+    private void resolveFunction(Stmt.Function function) {
+        beginScope();
+        for (Token param : function.params) {
+            declare(param);
+            define(param);
+        }
+        resolve(function.body);
+        endScope();
+    }
+
     private void beginScope() {
         scopes.push(new HashMap<String, Boolean>());
     }
@@ -79,6 +89,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         beginScope();
         resolve(stmt.statements);
         endScope();
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        declare(stmt.name);
+        define(stmt.name);
+        resolveFunction(stmt);
         return null;
     }
 
