@@ -14,6 +14,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitAssignExpr(Expr.Assign expr) {
+        resolve(expr.value);
+        resolveLocal(expr, expr.name);
+        return null;
+    }
+
+    @Override
     public Void visitVariableExpr(Expr.Variable expr) {
         if (!scopes.isEmpty() &&
                 scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
